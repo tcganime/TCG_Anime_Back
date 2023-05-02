@@ -1,0 +1,47 @@
+import { Request, Response, NextFunction } from 'express';
+import secret_key from './secret_key';
+import * as jwt from 'jsonwebtoken';
+
+const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization?.split(' ')[1];
+  
+    if (!token) {
+      return res.status(500).json({ message: 'Absent token' });
+    }
+  
+    try {
+      const decodedToken: { id: string, admin: boolean } = jwt.verify(token, secret_key.getSecretKey) as { id: string, admin: boolean };
+      if (req.body?.id) {
+        const isUserOwner = req.body.id === decodedToken.id;
+
+        if (isUserOwner)
+            req.body = {
+                id: decodedToken.id,
+                admin: decodedToken.admin,
+                ...req.body
+            }
+        else
+            req.body = {
+                id: decodedToken.id,
+                pub: true,
+                admin: decodedToken.admin,
+                ...req.body,
+            }
+        next();
+      }
+    } catch (error: jwt.TokenExpiredError | jwt.JsonWebTokenError) {
+        if (error instanceof jwt.TokenExpiredError) {
+            return res.status(500).json({ message: 'Expired token' });
+        } else {
+            return res.status(500).json({ message: 'Invalid Token', error: error.message });
+        }
+    }
+};
+
+function createJWT(id: string, admin: boolean) : string {
+    const token = jwt.sign({ id, admin }, secret_key.getSecretKey, { expiresIn: '2h' });
+    return token;
+}
+  
+export default { verifyJWT, createJWT }
+  
