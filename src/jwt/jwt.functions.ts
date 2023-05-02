@@ -29,7 +29,7 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
             }
         next();
       }
-    } catch (error: jwt.TokenExpiredError | jwt.JsonWebTokenError) {
+    } catch (error: any) {
         if (error instanceof jwt.TokenExpiredError) {
             return res.status(500).json({ message: 'Expired token' });
         } else {

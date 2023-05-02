@@ -5,7 +5,16 @@ import sequelize from './database/db_sequelize';
 import DATABASE from './database/tables_database'
 import secret_key from './jwt/secret_key';
 
+import userRouter from './routes/users.routes';
+
 DATABASE.init();
+
+sequelize.authenticate().then(() => {
+  console.log('Connection has been established successfully.');
+}).catch((error: Error) => {
+  console.error('Unable to connect to the database:', error);
+})
+
 
 console.log('Secret key is initialised')
 
@@ -26,17 +35,12 @@ app.use(function(req, res, next) {
 
 app.use(bodyParser.json());
 
-sequelize.authenticate().then(() => {
-    console.log('Connection has been established successfully.');
-  }).catch((error: Error) => {
-    console.error('Unable to connect to the database:', error);
-})
-
-
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World!');
     }
 );
+
+app.use('/users', userRouter);
 
 app.listen(port, () => {
     console.log(`Server is running at port http://localhost:${port}`);
