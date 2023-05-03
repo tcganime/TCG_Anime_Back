@@ -7,6 +7,8 @@ import jwtFunctions from '../jwt/jwt.functions';
 
 const router = express.Router();
 
+// basic routes
+
 router.post('/register', async (req: Request, res: Response) => {
     console.log(req.body);
     const username: string = req.body.username;
@@ -69,6 +71,40 @@ router.get('/profile', jwtFunctions.verifyJWT, async (req: Request, res: Respons
                     username: user.username
                 }
             })
+        }
+    }
+})
+
+router.get('/update', jwtFunctions.verifyJWT, async (req: Request, res: Response) => {
+    const { id, admin, pub, username, email, password } = req.body
+    if (!admin && !pub)
+        res.status(403).send({error: 'You are not allowed to do this !'})
+    else {
+        let user : User | null = await User.findOne({where: {id}})
+        if (user === null)
+            res.status(404).send({error: 'User is not found !'})
+        else {
+            user.update({
+                username: username,
+                email: email,
+                password: SHA512(password).toString()
+            })
+            res.status(200).send({message: 'User updated !'})
+        }
+    }
+})
+
+router.get('/delete', jwtFunctions.verifyJWT, async (req: Request, res: Response) => {
+    const { id, admin, pub } = req.body
+    if (!admin && !pub)
+        res.status(403).send({error: 'You are not allowed to do this !'})
+    else {
+        let user : User | null = await User.findOne({where: {id}})
+        if (user === null)
+            res.status(404).send({error: 'User is not found !'})
+        else {
+            user.destroy()
+            res.status(200).send({message: 'User deleted !'})
         }
     }
 })
