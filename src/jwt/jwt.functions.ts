@@ -10,25 +10,16 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     }
   
     try {
-      const decodedToken: { id: string, admin: boolean } = jwt.verify(token, secret_key.getSecretKey) as { id: string, admin: boolean };
-      if (req.body?.id) {
-        const isUserOwner = req.body.id === decodedToken.id;
-
-        if (isUserOwner)
-            req.body = {
-                id: decodedToken.id,
-                admin: decodedToken.admin,
-                ...req.body
-            }
-        else
-            req.body = {
-                id: decodedToken.id,
-                pub: true,
-                admin: decodedToken.admin,
-                ...req.body,
-            }
+        const decodedToken: { id: string, admin: boolean } = jwt.verify(token, secret_key.getSecretKey) as { id: string, admin: boolean };
+        if (req.body?.id) {
+            if (decodedToken.id !== req.body.id)
+                req.body = { ...req.body, admin: false, pub: false };
+            else
+                req.body = { ...req.body, admin: decodedToken.admin, pub: false };
+        } else {
+            req.body = { ...req.body, admin: decodedToken.admin, pub: true, id: decodedToken.id };
+        }
         next();
-      }
     } catch (error: any) {
         if (error instanceof jwt.TokenExpiredError) {
             return res.status(500).json({ message: 'Expired token' });
