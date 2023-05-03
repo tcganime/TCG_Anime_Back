@@ -23,6 +23,8 @@ class DB {
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 admin BOOLEAN NOT NULL DEFAULT FALSE,
+                victories INTEGER NOT NULL DEFAULT 0,
+                defeats INTEGER NOT NULL DEFAULT 0,
                 UNIQUE (username, email)
             )`,
             (err: Error) => {

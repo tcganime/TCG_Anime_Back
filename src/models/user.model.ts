@@ -9,6 +9,8 @@ class User extends Model {
     public created_at!: Date;
     public updated_at!: Date;
     public admin!: boolean;
+    public victories!: number;
+    public defeats!: number;
 }
 
 User.init({
@@ -45,6 +47,16 @@ User.init({
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
+    },
+    victories: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
+    defeats: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
     },
 }, {
     sequelize,
