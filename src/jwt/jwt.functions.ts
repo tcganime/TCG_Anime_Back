@@ -22,9 +22,9 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
         next();
     } catch (error: any) {
         if (error instanceof jwt.TokenExpiredError) {
-            return res.status(500).json({ message: 'Expired token' });
+            return res.status(401).json({ message: 'Expired token' });
         } else {
-            return res.status(500).json({ message: 'Invalid Token', error: error.message });
+            return res.status(401).json({ message: 'Invalid Token', error: error.message });
         }
     }
 };
