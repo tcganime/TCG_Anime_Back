@@ -4,9 +4,10 @@ import sequelize from '../database/db_sequelize';
 class Deck extends Model {
     public id!: number;
     public name!: string;
-    public description!: string;
     public created_at!: Date;
     public updated_at!: Date;
+    public composition!: object;
+    public user_id!: number;
 }
 
 Deck.init({
@@ -19,10 +20,6 @@ Deck.init({
         type: DataTypes.STRING,
         allowNull: false,
         unique: false
-    },
-    description: {
-        type: DataTypes.TEXT,
-        allowNull: false,
     },
     created_at: {
         type: DataTypes.DATE,
@@ -38,6 +35,10 @@ Deck.init({
         type: DataTypes.JSONB,
         allowNull: false,
         defaultValue: {},
+    },
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
 }, {
     sequelize,
