@@ -9,7 +9,6 @@ const router = express.Router();
 
 router.post('/register', async (req: Request, res: Response) => {
     console.log(req.body);
-    // const { username, email, password, admin} = req.body;
     const username: string = req.body.username;
     const email: string = req.body.email;
     const password: string = req.body.password;
@@ -48,5 +47,30 @@ router.post('/login', async (req: Request, res: Response) => {
         res.status(200).json({ 'token': token });
     }
 });
+
+
+router.get('/profile', jwtFunctions.verifyJWT, async (req: Request, res: Response) => {
+    const { id, pub, admin } = req.body
+
+    let user : User | null = await User.findOne({where: {id}})
+
+    console.log(user)
+
+    if (!user)
+        res.status(404).send({error: 'User is not found !'})
+    else {
+        if (admin || (pub == true)) {
+            res.status(200).send({
+                'user': user
+            })
+        } else {
+            res.status(200).send({
+                'user': {
+                    username: user.username
+                }
+            })
+        }
+    }
+})
 
 export default router;
