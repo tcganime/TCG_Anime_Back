@@ -32,7 +32,7 @@ router.post('/register', async (req: Request, res: Response) => {
     let pass: string = SHA512(password).toString();
     await User.create({ username, email, password: pass, admin }).then((user: User) => {
         let token: string = jwtFunctions.createJWT(user.id.toString(), user.admin);
-        res.status(201).json({ 'token': token });
+        res.status(201).json({ 'token': token, 'admin': user.admin });
     }).catch((err: Error) => {
         res.status(400).json({ error: err.message });
     });
