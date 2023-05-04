@@ -109,4 +109,22 @@ router.get('/delete', jwtFunctions.verifyJWT, async (req: Request, res: Response
     }
 })
 
+// admin routes
+
+router.get('/', jwtFunctions.verifyJWT, async (req: Request, res: Response) => {
+    const { admin } = req.body
+    if (!admin)
+        res.status(403).send({error: 'You are not allowed to do this !'})
+    else {
+        let users : User[] | null = await User.findAll()
+        if (users === null)
+            res.status(404).send({error: 'Users are not found !'})
+        else {
+            res.status(200).send({
+                'users': users
+            })
+        }
+    }
+})
+
 export default router;
