@@ -32,7 +32,7 @@ router.post('/register', async (req: Request, res: Response) => {
     let pass: string = SHA512(password).toString();
     await User.create({ username, email, password: pass, admin }).then((user: User) => {
         let token: string = jwtFunctions.createJWT(user.id.toString(), user.admin);
-        res.status(201).json({ 'token': token, 'admin': user.admin });
+        res.status(201).json({ 'token': token, 'admin': user.admin.toString() });
     }).catch((err: Error) => {
         res.status(400).json({ error: err.message });
     });
@@ -46,7 +46,7 @@ router.post('/login', async (req: Request, res: Response) => {
         res.status(400).json({ error: 'Invalid username or password' });
     else {
         let token: string = jwtFunctions.createJWT(user.id.toString(), user.admin);
-        res.status(200).json({ 'token': token, 'admin': user.admin });
+        res.status(200).json({ 'token': token, 'admin': user.admin.toString() });
     }
 });
 
