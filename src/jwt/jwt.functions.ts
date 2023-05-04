@@ -11,9 +11,10 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
   
     try {
         const decodedToken: { id: string, admin: boolean } = jwt.verify(token, secret_key.getSecretKey) as { id: string, admin: boolean };
+        console.log(decodedToken);
         if (req.body?.id) {
             if (decodedToken.id !== req.body.id)
-                req.body = { ...req.body, admin: false, pub: false };
+                req.body = { ...req.body, admin: decodedToken.admin, pub: false };
             else
                 req.body = { ...req.body, admin: decodedToken.admin, pub: false };
         } else {

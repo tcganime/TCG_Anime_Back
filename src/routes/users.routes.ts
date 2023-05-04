@@ -94,9 +94,9 @@ router.get('/update', jwtFunctions.verifyJWT, async (req: Request, res: Response
     }
 })
 
-router.get('/delete', jwtFunctions.verifyJWT, async (req: Request, res: Response) => {
-    const { id, admin, pub } = req.body
-    if (!admin && !pub)
+router.post('/delete', jwtFunctions.verifyJWT, async (req: Request, res: Response) => {
+    const { id, admin } = req.body
+    if (!admin)
         res.status(403).send({error: 'You are not allowed to do this !'})
     else {
         let user : User | null = await User.findOne({where: {id}})
@@ -112,6 +112,7 @@ router.get('/delete', jwtFunctions.verifyJWT, async (req: Request, res: Response
 // admin routes
 
 router.get('/', jwtFunctions.verifyJWT, async (req: Request, res: Response) => {
+    console.log(req.body)
     const { admin } = req.body
     if (!admin)
         res.status(403).send({error: 'You are not allowed to do this !'})
@@ -124,6 +125,23 @@ router.get('/', jwtFunctions.verifyJWT, async (req: Request, res: Response) => {
                 'users': users
             })
         }
+    }
+})
+
+router.post('/admin', jwtFunctions.verifyJWT, async (req: Request, res: Response) => {
+    console.log("body: ", req.body)
+    const { id, admin } = req.body
+    if (!admin)
+        res.status(403).send({error: 'You are not allowed to do this !'})
+    else {
+        User.findOne({where: {id}}).then((user: any) => {
+            user.update({
+                admin: true
+            })
+            res.status(200).send({message: 'User is now admin !'})
+        }).catch((err: Error) => {
+            res.status(404).send({error: 'User is not found !'})
+        })
     }
 })
 
