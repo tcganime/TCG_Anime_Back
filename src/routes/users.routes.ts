@@ -46,7 +46,7 @@ router.post('/login', async (req: Request, res: Response) => {
         res.status(400).json({ error: 'Invalid username or password' });
     else {
         let token: string = jwtFunctions.createJWT(user.id.toString(), user.admin);
-        res.status(200).json({ 'token': token });
+        res.status(200).json({ 'token': token, 'admin': user.admin });
     }
 });
 
