@@ -1,16 +1,14 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../database/db_sequelize';
 
-class Deck extends Model {
+class Archetypes extends Model {
     public id!: number;
     public name!: string;
     public created_at!: Date;
     public updated_at!: Date;
-    public composition!: object;
-    public user_id!: number;
 }
 
-Deck.init({
+Archetypes.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -19,7 +17,7 @@ Deck.init({
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: false
+        unique: true,
     },
     created_at: {
         type: DataTypes.DATE,
@@ -31,25 +29,12 @@ Deck.init({
         allowNull: false,
         defaultValue: DataTypes.NOW,
     },
-    composition: {
-        type: DataTypes.JSONB,
-        allowNull: false,
-        defaultValue: {},
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'Users',
-            key: 'id',
-        }
-    },
 }, {
     sequelize,
-    modelName: 'Deck',
+    tableName: 'archetypes',
     timestamps: true,
-    underscored: true,
-    tableName: 'decks',
+    updatedAt: 'updated_at',
+    createdAt: 'created_at',
 });
 
-export default Deck;  
+export default Archetypes;

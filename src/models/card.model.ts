@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../database/db_sequelize';
+import Archetypes from './archetypes.models';
 
 class Card extends Model {
     public id!: number;
@@ -9,7 +10,10 @@ class Card extends Model {
     public type!: Array<string>;
     public created_at!: Date;
     public updated_at!: Date;
-    public functionality!: object;
+    public effect!: string;
+    public image!: string;
+    public archetypes!: Array<number>;
+    public limited!: number;
 }
 
 Card.init({
@@ -45,10 +49,29 @@ Card.init({
         allowNull: false,
         defaultValue: DataTypes.NOW,
     },
-    functionality: {
-        type: DataTypes.JSONB,
-        allowNull: false,
-        defaultValue: {},
+    effect: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: '',
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: '',
+    },
+    archetypes: {
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        references: {
+            model: 'Archetypes', 
+            key: 'id',
+        },
+        allowNull: true,
+        defaultValue: [],
+    },
+    limited: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
     },
 }, {
     sequelize,
@@ -56,6 +79,8 @@ Card.init({
     timestamps: true,
     underscored: true,
     tableName: 'cards',
+    updatedAt: 'updated_at',
+    createdAt: 'created_at',
 });
 
 export default Card;

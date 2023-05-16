@@ -5,8 +5,11 @@ import sequelize from './database/db_sequelize';
 import DATABASE from './database/tables_database'
 import secret_key from './jwt/secret_key';
 
+// Routers
 import userRouter from './routes/users.routes';
 import deckRouter from './routes/deck.routes';
+import cardRouter from './routes/card.routes';
+import archetypeRouter from './routes/archetypes.routes';
 
 DATABASE.init();
 
@@ -43,6 +46,8 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/users', userRouter);
 app.use('/decks', deckRouter);
+app.use('/cards', cardRouter);
+app.use('/archetypes', archetypeRouter);
 
 app.listen(port, () => {
     console.log(`Server is running at port http://localhost:${port}`);
