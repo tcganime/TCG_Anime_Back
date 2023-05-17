@@ -3,9 +3,11 @@ import { Sequelize } from 'sequelize';
 // sqlite database : ./anime.sqlite
 
 const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: './anime.sqlite',
-    logging: true,
+    dialect: 'postgres',
+    host: 'localhost',
+    database: 'postgres',
+    username: 'anime_magic',
+    password: 'anime_magic'
 });
 
   export default sequelize;

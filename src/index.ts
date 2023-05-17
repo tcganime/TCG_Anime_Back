@@ -1,8 +1,8 @@
 import express, {Express, Request, Response} from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import sequelize from './db_sequelize';
-import DATABASE from './tables_database';
+import sequelize from './database/db_sequelize';
+import DATABASE from './database/tables_database';
 import secret_key from './jwt/secret_key';
 
 // Routers
