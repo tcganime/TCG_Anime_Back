@@ -8,6 +8,7 @@ import secret_key from './jwt/secret_key';
 // Routers
 import userRouter from './routes/users.routes';
 import deckRouter from './routes/deck.routes';
+import cardRouter from './routes/cards.routes';
 import archetypeRouter from './routes/archetypes.routes';
 
 DATABASE.init();
@@ -32,7 +33,7 @@ app.use(cors({origin: true, credentials: true}));
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header('Access-Control-Allow-Methods', 'DELETE, PUT, GET, POST');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   next();
 });
 
@@ -45,6 +46,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/users', userRouter);
 app.use('/decks', deckRouter);
+app.use('/cards', cardRouter);
 app.use('/archetypes', archetypeRouter);
 
 app.listen(port, () => {

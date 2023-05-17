@@ -27,21 +27,17 @@ SpellCard.init({
     created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
     updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
     archetypes: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: [],
-        references: {
-            model: 'Archetypes',
-            key: 'id',
-        }
+        defaultValue: '',
     },
     type: {
         type: DataTypes.STRING,
