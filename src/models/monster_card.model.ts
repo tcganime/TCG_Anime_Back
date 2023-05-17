@@ -6,12 +6,13 @@ class MonsterCard extends Model {
     public name!: string;
     public created_at!: Date;
     public updated_at!: Date;
-    public archetypes!: Array<number>;
+    public archetypes!: string;
     public level!: number;
     public atk!: number;
     public def!: number;
     public attribute!: string;
-    public type!: Array<string>;
+    public card_type!: string;
+    public monster_type!: string;
     public effect!: string;
     public description!: string;
     public image_url!: string;
@@ -31,20 +32,17 @@ MonsterCard.init({
     created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
     updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
     archetypes: {
-        type: DataTypes.ARRAY(DataTypes.INTEGER),
+        type: DataTypes.STRING,
         allowNull: false,
-        references: {
-            model: 'Archetypes',
-            key: 'id',
-        }
+        defaultValue: '',
     },
     level: {
         type: DataTypes.INTEGER,
@@ -76,8 +74,13 @@ MonsterCard.init({
         allowNull: false,
         defaultValue: '',
     },
-    type: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+    card_type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: '',
+    },
+    monster_type: {
+        type: DataTypes.STRING,
         allowNull: false,
         defaultValue: [],
     },
