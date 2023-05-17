@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../database/db_sequelize';
+import sequelize from '../db_sequelize';
 
 class Deck extends Model {
     public id!: number;
@@ -24,13 +24,13 @@ Deck.init({
     created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
     updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
         // postgres version
-        defaultValue: DataTypes.NOW,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
     composition: {
         type: DataTypes.JSONB,
@@ -51,6 +51,7 @@ Deck.init({
     timestamps: true,
     underscored: true,
     tableName: 'decks',
+    freezeTableName: true,
 });
 
 export default Deck;  

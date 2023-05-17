@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../database/db_sequelize';
+import sequelize from '../db_sequelize';
 
 class Archetypes extends Model {
     public id!: number;
@@ -22,12 +22,12 @@ Archetypes.init({
     created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
     updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW,
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
 }, {
     sequelize,
@@ -35,6 +35,7 @@ Archetypes.init({
     timestamps: true,
     updatedAt: 'updated_at',
     createdAt: 'created_at',
+    freezeTableName: true,
 });
 
 export default Archetypes;
