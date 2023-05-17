@@ -57,29 +57,102 @@ class DB {
         );
     }
 
-    createCardTable() {
+    createMonsterCardTable() {
         this.pool.query(
-            `CREATE TABLE IF NOT EXISTS cards (
+            `CREATE TABLE IF NOT EXISTS monster_cards (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL UNIQUE,
-                card_type TEXT NOT NULL,
-                type TEXT[] NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
+                card_type VARCHAR(255) NOT NULL,
+                monster_type TEXT[] NOT NULL,
+                attribute VARCHAR(255) NOT NULL,
+                level INTEGER NOT NULL,
+                atk INTEGER NOT NULL,
+                def INTEGER NOT NULL,
                 description TEXT NOT NULL,
-                effect TEXT NOT NULL,
-                image TEXT NOT NULL,
-                limited NUMERIC DEFAULT 0,
-                archetypes NUMERIC[],
+                image_url TEXT NOT NULL,
+                effect JSONB[] NOT NULL,
+                archetypes TEXT[] NOT NULL,
                 UNIQUE (name)
-            )`, (err: Error) => {
+            )`,
+            (err: Error) => {
                 if (err)
                     console.log(err.stack);
                 else
-                    console.log('Cards table created');
+                    console.log('Monster cards table created');
             }
-        )
+        );
     }
+
+    createSpellCardTable() {
+        this.pool.query(
+            `CREATE TABLE IF NOT EXISTS spell_cards (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL UNIQUE,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL,
+                card_type VARCHAR(255) NOT NULL,
+                description TEXT NOT NULL,
+                image_url TEXT NOT NULL,
+                effect JSONB NOT NULL,
+                archetypes TEXT[] NOT NULL,
+                UNIQUE (name)
+            )`,
+            (err: Error) => {
+                if (err)
+                    console.log(err.stack);
+                else
+                    console.log('Spell cards table created');
+            }
+        );
+    }
+
+    createTrapCardTable() {
+        this.pool.query(
+            `CREATE TABLE IF NOT EXISTS trap_cards (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL UNIQUE,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL,
+                card_type VARCHAR(255) NOT NULL,
+                description TEXT NOT NULL,
+                image_url TEXT NOT NULL,
+                effect JSONB NOT NULL,
+                archetypes TEXT[] NOT NULL,
+                UNIQUE (name)
+            )`,
+            (err: Error) => {
+                if (err)
+                    console.log(err.stack);
+                else
+                    console.log('Trap cards table created');
+            }
+        );
+    }
+
+    createArchetypeCatalogTable() {
+        this.pool.query(
+            `CREATE TABLE IF NOT EXISTS archetype_catalog (
+                id SERIAL PRIMARY KEY,
+                archetype_id INTEGER NOT NULL REFERENCES archetypes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL,
+                monsters INTEGER[] NOT NULL,
+                spells INTEGER[] NOT NULL,
+                traps INTEGER[] NOT NULL,
+                UNIQUE (archetype_id)
+            )`,
+            (err: Error) => {
+                if (err)
+                    console.log(err.stack);
+                else
+                    console.log('Archetype catalog table created');
+            }
+        );
+    }
+
+
 
     createArchetypeTable() {
         this.pool.query(
@@ -100,7 +173,10 @@ class DB {
     init() {
         this.createUserTable();
         this.createDeckTable();
-        this.createCardTable();
+        this.createMonsterCardTable();
+        this.createSpellCardTable();
+        this.createTrapCardTable();
+        this.createArchetypeCatalogTable();
         this.createArchetypeTable();
     }
 }

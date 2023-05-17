@@ -29,6 +29,7 @@ Deck.init({
     updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
+        // postgres version
         defaultValue: DataTypes.NOW,
     },
     composition: {
