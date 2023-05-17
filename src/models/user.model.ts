@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../database/db_sequelize';
+import sequelize from '../db_sequelize';
 
 class User extends Model {
     public id!: number;
@@ -64,6 +64,7 @@ User.init({
     timestamps: true,
     underscored: true,
     tableName: 'users',
+    freezeTableName: true,
 });
 
 export default User;
