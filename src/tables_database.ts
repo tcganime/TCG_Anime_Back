@@ -1,20 +1,13 @@
-import { Pool } from 'pg';
+import sqlite3 from 'sqlite3';
 
 class DB {
-    pool = new Pool({
-        user: 'anime_magic',
-        host: 'localhost',
-        database: 'postgres',
-        password: 'anime_magic',
-        port: 5432,
-    })
+    db = new sqlite3.Database('./anime.sqlite')
 
     constructor() {
-        console.log('DB instance created')
+        console.log('DB instance created');
     }
-
     createUserTable() {        
-        this.pool.query(
+        this.db.run(
             `CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 username VARCHAR(255) NOT NULL,
@@ -37,7 +30,7 @@ class DB {
     }
 
     createDeckTable() {
-        this.pool.query(
+        this.db.run(
             `CREATE TABLE IF NOT EXISTS decks (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
@@ -57,32 +50,84 @@ class DB {
         );
     }
 
-    createCardTable() {
-        this.pool.query(
-            `CREATE TABLE IF NOT EXISTS cards (
+    createMonsterCardTable() {
+        this.db.run(
+            `CREATE TABLE IF NOT EXISTS monster_cards (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL UNIQUE,
-                card_type TEXT NOT NULL,
-                type TEXT[] NOT NULL,
+                name VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
-                description TEXT NOT NULL,
-                effect TEXT NOT NULL,
-                image TEXT NOT NULL,
-                limited NUMERIC DEFAULT 0,
                 archetypes NUMERIC[],
+                level INTEGER NOT NULL,
+                atk INTEGER NOT NULL,
+                def INTEGER NOT NULL,
+                attribute VARCHAR(255) NOT NULL,
+                type STRING[] NOT NULL,
+                description TEXT NOT NULL,
+                image_url TEXT NOT NULL,
+                effect TEXT NOT NULL,
                 UNIQUE (name)
-            )`, (err: Error) => {
+            );
+            `, (err: Error) => {
                 if (err)
                     console.log(err.stack);
                 else
-                    console.log('Cards table created');
+                    console.log('Monster cards table created');
             }
-        )
+        );
     }
 
+    createSpellCardTable() {
+        this.db.run(
+            `CREATE TABLE IF NOT EXISTS spell_cards (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL,
+                archetypes NUMERIC[],
+                type VARCHAR(255) NOT NULL,
+                description TEXT NOT NULL,
+                image_url TEXT NOT NULL,
+                effect TEXT NOT NULL,
+                UNIQUE (name)
+            );
+            `, (err: Error) => {
+                if (err)
+                    console.log(err.stack);
+                else
+                    console.log('Spell cards table created');
+            }
+        );
+    }
+
+    createTrapCardTable() {
+        this.db.run(
+            `CREATE TABLE IF NOT EXISTS trap_cards (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL,
+                archetypes NUMERIC[],
+                type VARCHAR(255) NOT NULL,
+                description TEXT NOT NULL,
+                image_url TEXT NOT NULL,
+                effect TEXT NOT NULL,
+                UNIQUE (name)
+            );
+            `, (err: Error) => {
+                if (err)
+                    console.log(err.stack);
+                else
+                    console.log('Trap cards table created');
+            }
+        );
+    }
+
+
+
+
     createArchetypeTable() {
-        this.pool.query(
+        this.db.run(
             `CREATE TABLE IF NOT EXISTS archetypes (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL UNIQUE,
@@ -100,7 +145,9 @@ class DB {
     init() {
         this.createUserTable();
         this.createDeckTable();
-        this.createCardTable();
+        this.createMonsterCardTable();
+        this.createSpellCardTable();
+        this.createTrapCardTable();
         this.createArchetypeTable();
     }
 }
