@@ -10,7 +10,7 @@ class SpellCard extends Model {
     public type!: string;
     public effect!: string;
     public description!: string;
-    public image!: string;
+    public image_url!: string;
 }
 
 SpellCard.init({
@@ -58,7 +58,7 @@ SpellCard.init({
         allowNull: false,
         defaultValue: '',
     },
-    image: {
+    image_url: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: '',

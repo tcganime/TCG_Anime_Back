@@ -6,15 +6,15 @@ class MonsterCard extends Model {
     public name!: string;
     public created_at!: Date;
     public updated_at!: Date;
-    public archetype!: Array<number>;
+    public archetypes!: Array<number>;
     public level!: number;
     public atk!: number;
     public def!: number;
     public attribute!: string;
-    public monster_type!: Array<string>;
+    public type!: Array<string>;
     public effect!: string;
     public description!: string;
-    public image!: string;
+    public image_url!: string;
 }
 
 MonsterCard.init({
@@ -38,7 +38,7 @@ MonsterCard.init({
         allowNull: false,
         defaultValue: DataTypes.NOW,
     },
-    archetype: {
+    archetypes: {
         type: DataTypes.ARRAY(DataTypes.INTEGER),
         allowNull: false,
         references: {
@@ -66,7 +66,7 @@ MonsterCard.init({
         allowNull: false,
         defaultValue: '',
     },
-    image: {
+    image_url: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: '',
@@ -76,7 +76,7 @@ MonsterCard.init({
         allowNull: false,
         defaultValue: '',
     },
-    monster_type: {
+    type: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
         defaultValue: [],
