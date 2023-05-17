@@ -61,13 +61,17 @@ class DB {
         this.pool.query(
             `CREATE TABLE IF NOT EXISTS cards (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
+                name VARCHAR(255) NOT NULL UNIQUE,
                 card_type TEXT NOT NULL,
                 type TEXT[] NOT NULL,
                 created_at TIMESTAMP NOT NULL,
                 updated_at TIMESTAMP NOT NULL,
                 description TEXT NOT NULL,
-                functionality JSONB NOT NULL
+                effect TEXT NOT NULL,
+                image TEXT NOT NULL,
+                limited NUMERIC DEFAULT 0,
+                archetypes NUMERIC[],
+                UNIQUE (name)
             )`, (err: Error) => {
                 if (err)
                     console.log(err.stack);
@@ -77,10 +81,27 @@ class DB {
         )
     }
 
+    createArchetypeTable() {
+        this.pool.query(
+            `CREATE TABLE IF NOT EXISTS archetypes (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NOT NULL UNIQUE,
+                created_at TIMESTAMP NOT NULL,
+                updated_at TIMESTAMP NOT NULL
+            )`, (err: Error) => {
+                if (err)
+                    console.log(err.stack);
+                else
+                    console.log('Archetypes table created');
+            }
+        )
+    }
+
     init() {
         this.createUserTable();
         this.createDeckTable();
         this.createCardTable();
+        this.createArchetypeTable();
     }
 }
 
