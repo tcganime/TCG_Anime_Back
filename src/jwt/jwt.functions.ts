@@ -4,14 +4,14 @@ import * as jwt from 'jsonwebtoken';
 
 const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(' ')[1];
-  
+
     if (!token) {
       return res.status(500).json({ message: 'Absent token' });
     }
   
     try {
         const decodedToken: { id: string, admin: boolean } = jwt.verify(token, secret_key.getSecretKey) as { id: string, admin: boolean };
-        console.log(decodedToken);
+        console.log(decodedToken)
         if (req.body?.id) {
             if (decodedToken.id !== req.body.id)
                 req.body = { ...req.body, admin: decodedToken.admin, pub: false };

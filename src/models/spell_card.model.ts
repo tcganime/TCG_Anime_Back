@@ -1,37 +1,28 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../db_sequelize';
 
-class User extends Model {
+class SpellCard extends Model {
     public id!: number;
-    public username!: string;
-    public email!: string;
-    public password!: string;
+    public name!: string;
     public created_at!: Date;
     public updated_at!: Date;
-    public admin!: boolean;
-    public victories!: number;
-    public defeats!: number;
+    public archetypes!: Array<number>;
+    public type!: string;
+    public effect!: string;
+    public description!: string;
+    public image_url!: string;
 }
 
-User.init({
+SpellCard.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
     },
-    username: {
+    name: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false,
     },
     created_at: {
         type: DataTypes.DATE,
@@ -43,28 +34,38 @@ User.init({
         allowNull: false,
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
-    admin: {
-        type: DataTypes.BOOLEAN,
+    archetypes: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: false,
+        defaultValue: '',
     },
-    victories: {
-        type: DataTypes.INTEGER,
+    type: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: '',
     },
-    defeats: {
-        type: DataTypes.INTEGER,
+    effect: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: '',
+    },
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: '',
+    },
+    image_url: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: '',
     },
 }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'SpellCards',
     timestamps: true,
     underscored: true,
-    tableName: 'users',
+    tableName: 'spell_cards',
     freezeTableName: true,
 });
 
-export default User;
+export default SpellCard;

@@ -1,27 +1,20 @@
-import { Pool } from 'pg';
+import sqlite3 from 'sqlite3';
 
 class DB {
-    pool = new Pool({
-        user: 'anime_magic',
-        host: 'localhost',
-        database: 'postgres',
-        password: 'anime_magic',
-        port: 5432,
-    })
+    db = new sqlite3.Database('./anime.sqlite')
 
     constructor() {
-        console.log('DB instance created')
+        console.log('DB instance created');
     }
-
     createUserTable() {        
-        this.pool.query(
+        this.db.run(
             `CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username VARCHAR(255) NOT NULL,
                 email VARCHAR(255) NOT NULL,
                 password VARCHAR(255) NOT NULL,
-                created_at TIMESTAMP NOT NULL,
-                updated_at TIMESTAMP NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 admin BOOLEAN NOT NULL DEFAULT FALSE,
                 victories INTEGER NOT NULL DEFAULT 0,
                 defeats INTEGER NOT NULL DEFAULT 0,
@@ -37,12 +30,12 @@ class DB {
     }
 
     createDeckTable() {
-        this.pool.query(
+        this.db.run(
             `CREATE TABLE IF NOT EXISTS decks (
-                id SERIAL PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name VARCHAR(255) NOT NULL,
-                created_at TIMESTAMP NOT NULL,
-                updated_at TIMESTAMP NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 composition JSONB NOT NULL,
                 user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
                 UNIQUE (user_id)
@@ -58,25 +51,25 @@ class DB {
     }
 
     createMonsterCardTable() {
-        this.pool.query(
+        this.db.run(
             `CREATE TABLE IF NOT EXISTS monster_cards (
-                id SERIAL PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name VARCHAR(255) NOT NULL,
-                created_at TIMESTAMP NOT NULL,
-                updated_at TIMESTAMP NOT NULL,
-                card_type VARCHAR(255) NOT NULL,
-                monster_type TEXT[] NOT NULL,
-                attribute VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                archetypes STRING,
                 level INTEGER NOT NULL,
                 atk INTEGER NOT NULL,
                 def INTEGER NOT NULL,
+                attribute VARCHAR(255) NOT NULL,
+                card_type VARCHAR(255) NOT NULL,
+                monster_type VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
                 image_url TEXT NOT NULL,
-                effect JSONB[] NOT NULL,
-                archetypes TEXT[] NOT NULL,
+                effect VARCHAR(255) NOT NULL,
                 UNIQUE (name)
-            )`,
-            (err: Error) => {
+            );
+            `, (err: Error) => {
                 if (err)
                     console.log(err.stack);
                 else
@@ -86,20 +79,20 @@ class DB {
     }
 
     createSpellCardTable() {
-        this.pool.query(
+        this.db.run(
             `CREATE TABLE IF NOT EXISTS spell_cards (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL UNIQUE,
-                created_at TIMESTAMP NOT NULL,
-                updated_at TIMESTAMP NOT NULL,
-                card_type VARCHAR(255) NOT NULL,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                archetypes STRING,
+                type VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
                 image_url TEXT NOT NULL,
-                effect JSONB NOT NULL,
-                archetypes TEXT[] NOT NULL,
+                effect TEXT NOT NULL,
                 UNIQUE (name)
-            )`,
-            (err: Error) => {
+            );
+            `, (err: Error) => {
                 if (err)
                     console.log(err.stack);
                 else
@@ -109,20 +102,20 @@ class DB {
     }
 
     createTrapCardTable() {
-        this.pool.query(
+        this.db.run(
             `CREATE TABLE IF NOT EXISTS trap_cards (
-                id SERIAL PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name VARCHAR(255) NOT NULL UNIQUE,
-                created_at TIMESTAMP NOT NULL,
-                updated_at TIMESTAMP NOT NULL,
-                card_type VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                archetypes STRING,
+                type VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
                 image_url TEXT NOT NULL,
-                effect JSONB NOT NULL,
-                archetypes TEXT[] NOT NULL,
+                effect TEXT NOT NULL,
                 UNIQUE (name)
-            )`,
-            (err: Error) => {
+            );
+            `, (err: Error) => {
                 if (err)
                     console.log(err.stack);
                 else
@@ -131,31 +124,11 @@ class DB {
         );
     }
 
-    createArchetypeCatalogTable() {
-        this.pool.query(
-            `CREATE TABLE IF NOT EXISTS archetype_catalog (
-                id SERIAL PRIMARY KEY,
-                archetype_id INTEGER NOT NULL REFERENCES archetypes(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                created_at TIMESTAMP NOT NULL,
-                updated_at TIMESTAMP NOT NULL,
-                monsters INTEGER[] NOT NULL,
-                spells INTEGER[] NOT NULL,
-                traps INTEGER[] NOT NULL,
-                UNIQUE (archetype_id)
-            )`,
-            (err: Error) => {
-                if (err)
-                    console.log(err.stack);
-                else
-                    console.log('Archetype catalog table created');
-            }
-        );
-    }
 
 
 
     createArchetypeTable() {
-        this.pool.query(
+        this.db.run(
             `CREATE TABLE IF NOT EXISTS archetypes (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(255) NOT NULL UNIQUE,
@@ -176,7 +149,6 @@ class DB {
         this.createMonsterCardTable();
         this.createSpellCardTable();
         this.createTrapCardTable();
-        this.createArchetypeCatalogTable();
         this.createArchetypeTable();
     }
 }
