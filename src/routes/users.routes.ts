@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { Op } from 'sequelize';
 import User from '../models/user.model';
 import { SHA512 } from 'crypto-js';
 import * as check from '../utils/check_functions'
@@ -10,44 +9,40 @@ const router = express.Router();
 // basic routes
 
 router.post('/register', async (req: Request, res: Response) => {
-    console.log(req.body);
-    const username: string = req.body.username;
-    const email: string = req.body.email;
-    const password: string = req.body.password;
-    let admin: boolean | undefined = req.body?.admin;
-    const userVerif: User | null = await User.findOne({ where: { [Op.or]: [{ username }, { email }] } });
-
-    if (userVerif !== null) {
-        if (userVerif.username === username)
-            res.status(400).json({ error: 'Username already taken' });
-        else
-            res.status(400).json({ error: 'Email already taken' });
+    try {
+      const pass = SHA512(req.body.password).toString();
+      const user = await User.create({
+        username: req.body.username,
+        email: req.body.email,
+        password: pass,
+        admin: false,
+        victories: 0,
+        defeats: 0
+      });
+      let token: string = jwtFunctions.createJWT(user.id.toString(), user.admin);
+      res.status(201).json({ 'token': token, 'admin': user.admin.toString() });
+    } catch (error : any) {
+      res.status(400).json({ error: error.message });
     }
-
-    if (!check.check_password(password) || !check.check_email(email))
-        res.status(400).json({ error: 'Invalid password or email' });
-
-    if (admin === undefined)
-        admin = false;
-    let pass: string = SHA512(password).toString();
-    await User.create({ username, email, password: pass, admin }).then((user: User) => {
-        let token: string = jwtFunctions.createJWT(user.id.toString(), user.admin);
-        res.status(201).json({ 'token': token, 'admin': user.admin.toString() });
-    }).catch((err: Error) => {
-        res.status(400).json({ error: err.message });
-    });
-});
+  });
 
 router.post('/login', async (req: Request, res: Response) => {
-    const { username, password } = req.body;
-    let pass: string = SHA512(password).toString();
-    const user: User | null = await User.findOne({ where: { username, password: pass } });
-    if (user === null)
-        res.status(400).json({ error: 'Invalid username or password' });
-    else {
-        let token: string = jwtFunctions.createJWT(user.id.toString(), user.admin);
-        res.status(200).json({ 'token': token, 'admin': user.admin.toString() });
-    }
+    let pass = SHA512(req.body.password).toString();
+    User.findOne({
+        where: {
+            username: req.body.username,
+            password: pass
+        }
+    }).then((user: User | null) => {
+        if (user === null)
+            res.status(404).send({error: 'User is not found !'})
+        else {
+            let token: string = jwtFunctions.createJWT(user.id.toString(), user.admin);
+            res.status(200).json({ 'token': token, 'admin': user.admin.toString() });
+        }
+    }).catch((err: Error) => {
+        res.status(500).send({error: err.message})
+    })
 });
 
 
