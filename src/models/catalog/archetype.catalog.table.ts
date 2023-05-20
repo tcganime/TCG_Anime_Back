@@ -25,6 +25,8 @@ ArchetypeCatalog.init({
             model: 'archetypes',
             key: 'id'
         },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
     },
     created_at: {
         type: DataTypes.DATE,
@@ -50,6 +52,7 @@ ArchetypeCatalog.init({
     },
 }, {
     sequelize,
+    modelName: 'ArchetypeCatalog',
     tableName: 'archetype_catalog',
     timestamps: true,
     updatedAt: 'updated_at',
