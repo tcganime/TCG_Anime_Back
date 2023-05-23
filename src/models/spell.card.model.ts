@@ -1,24 +1,19 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../database/db_sequelize';
 
-class MonsterCard extends Model {
+class SpellCard extends Model {
     public id!: number;
     public name!: string;
     public created_at!: Date;
     public updated_at!: Date;
-    public archetypes!: string;
-    public level!: number;
-    public atk!: number;
-    public def!: number;
-    public attribute!: string;
+    public archetypes!: string[]
     public card_type!: string;
-    public monster_type!: string;
-    public effect!: string;
+    public effect!: object[];
     public description!: string;
     public image_url!: string;
 }
 
-MonsterCard.init({
+SpellCard.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -40,24 +35,18 @@ MonsterCard.init({
         defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
     },
     archetypes: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+        allowNull: false,
+        defaultValue: [],
+    },
+    card_type: {
         type: DataTypes.STRING,
         allowNull: false,
         defaultValue: '',
     },
-    level: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-    },
-    atk: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-    },
-    def: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
+    effect: {
+        type: DataTypes.ARRAY(DataTypes.JSONB),
+        allowNull: false
     },
     description: {
         type: DataTypes.STRING,
@@ -69,33 +58,13 @@ MonsterCard.init({
         allowNull: false,
         defaultValue: '',
     },
-    attribute: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: '',
-    },
-    card_type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: '',
-    },
-    monster_type: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: [],
-    },
-    effect: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: '',
-    }
 }, {
     sequelize,
-    modelName: 'MonsterCard',
+    modelName: 'SpellCards',
     timestamps: true,
     underscored: true,
-    tableName: 'monster_cards',
+    tableName: 'spell_cards',
     freezeTableName: true,
 });
 
-export default MonsterCard;
+export default SpellCard;

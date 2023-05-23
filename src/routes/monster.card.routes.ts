@@ -4,17 +4,28 @@ import jwtFunctions from '../jwt/jwt.functions';
 import MonsterCard from '../models/monster.card.model';
 import Archetypes from '../models/archetypes.models';
 import ArchetypeCatalog from '../models/catalog/archetype.catalog.table';
+import SpellCard from '../models/spell.card.model';
 
 const router = express.Router();
 
-function addArchetypeCatalog(archetype_id: number, monster_id: number) {
+function addMonsterToArchetypeCatalog(archetype_id: number, monster_id: number) {
     ArchetypeCatalog.findOne({
         where: {
             archetype_id
         }
     }).then((catalog: any) => {
-        catalog.monsters.push(monster_id)
-        catalog.save()
+        ArchetypeCatalog.update({
+            monsters: [...catalog.monsters, monster_id]
+        }, {
+            where: {
+                archetype_id
+            }
+        }).then((catalog: any) => {
+            console.log(catalog)
+        }).catch((err: any) => {
+            console.log('Error in ArchetypeCatalog.update')
+            console.log(err)
+        })
     }).catch((err: any) => {
         ArchetypeCatalog.create({
             archetype_id,
@@ -35,6 +46,10 @@ router.post('/create/monster', jwtFunctions.verifyJWT, async (req: Request, res:
     let { admin, name, archetypes, level, atk, def, attribute, card_type, monster_type, description, image_url, effect } = req.body;
     if (!admin)
         res.status(400).json({ error: 'You are not admin' });
+    SpellCard.findOne({ where: { name } }).then((card: any) => {
+        if (card)
+            res.status(400).json({ error: 'A spell with that name already exists.' });
+    })
     MonsterCard.create({
         name,
         archetypes,
@@ -52,14 +67,14 @@ router.post('/create/monster', jwtFunctions.verifyJWT, async (req: Request, res:
             Archetypes.create({
                 name: archetype
             }).then((archetype: any) => {
-                addArchetypeCatalog(archetype.id, monster.id)
+                addMonsterToArchetypeCatalog(archetype.id, monster.id)
             }).catch((err: any) => {
                 Archetypes.findOne({
                     where: {
                         name: archetype
                     }
                 }).then((archetype: any) => {
-                    addArchetypeCatalog(archetype.id, monster.id)
+                    addMonsterToArchetypeCatalog(archetype.id, monster.id)
                 }).catch((err: any) => {
                     console.log('Error in Archetypes.findOne')
                     console.log(err)

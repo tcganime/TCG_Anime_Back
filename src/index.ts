@@ -8,7 +8,8 @@ import secret_key from './jwt/secret_key';
 // Routers
 import userRouter from './routes/users.routes';
 import deckRouter from './routes/deck.routes';
-import cardRouter from './routes/monster.card.route.';
+import monsterCardRouter from './routes/monster.card.routes';
+import spellCardRouter from './routes/spell.card.routes';
 
 DATABASE.init();
 
@@ -45,7 +46,8 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/users', userRouter);
 app.use('/decks', deckRouter);
-app.use('/cards', cardRouter);
+app.use('/cards', monsterCardRouter);
+app.use('/cards', spellCardRouter);
 
 app.listen(port, () => {
     console.log(`Server is running at port http://localhost:${port}`);

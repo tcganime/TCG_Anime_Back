@@ -95,7 +95,7 @@ class DB {
                 card_type VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
                 image_url TEXT NOT NULL,
-                effect JSONB NOT NULL,
+                effect JSONB[] NOT NULL,
                 archetypes TEXT[] NOT NULL,
                 UNIQUE (name)
             )`,
@@ -118,7 +118,7 @@ class DB {
                 card_type VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
                 image_url TEXT NOT NULL,
-                effect JSONB NOT NULL,
+                effect JSONB[] NOT NULL,
                 archetypes TEXT[] NOT NULL,
                 UNIQUE (name)
             )`,
