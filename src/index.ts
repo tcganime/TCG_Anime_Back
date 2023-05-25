@@ -10,6 +10,7 @@ import userRouter from './routes/users.routes';
 import deckRouter from './routes/deck.routes';
 import monsterCardRouter from './routes/monster.card.routes';
 import spellCardRouter from './routes/spell.card.routes';
+import trapCardRouter from './routes/trap.card.routes';
 
 DATABASE.init();
 
@@ -48,6 +49,7 @@ app.use('/users', userRouter);
 app.use('/decks', deckRouter);
 app.use('/cards', monsterCardRouter);
 app.use('/cards', spellCardRouter);
+app.use('/cards', trapCardRouter);
 
 app.listen(port, () => {
     console.log(`Server is running at port http://localhost:${port}`);

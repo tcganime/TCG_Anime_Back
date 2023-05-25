@@ -4,7 +4,7 @@ import SpellCard from '../models/spell.card.model';
 import Archetypes from '../models/archetypes.models';
 import ArchetypeCatalog from '../models/catalog/archetype.catalog.table';
 import MonsterCard from '../models/monster.card.model';
-import { exit } from 'process';
+import TrapCard from '../models/trap.card.model';
 
 const router = express.Router();
 
@@ -58,6 +58,10 @@ router.post('/create/spell', async (req: Request, res: Response) => {
     MonsterCard.findOne({where: {name}}).then((card: any) => {
         if (card)
             res.send(400).json({ message: 'A monster with that name already exists.' });
+    })
+    TrapCard.findOne({where: {name}}).then((card: any) => {
+        if (card)
+            res.send(400).json({ message: 'A trap with that name already exists.' });
     })
     SpellCard.create({
             name,
