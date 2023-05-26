@@ -1,11 +1,10 @@
 import express, {Express, Request, Response} from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import DATABASE from './database/tables_database';
-import secret_key from './jwt/secret_key';
 
 // Routers
 import userRouter from './routes/users.routes';
+import monsterCardRouter from './routes/monster.card.routes';
 
 import mongoose, { ConnectOptions } from 'mongoose';
 
@@ -44,6 +43,7 @@ app.get('/', (req: Request, res: Response) => {
 );
 
 app.use('/users', userRouter);
+app.use('/monsters', monsterCardRouter);
 
 app.listen(8000, () => {
     console.log(`Server is running at port http://localhost:${8000}`);

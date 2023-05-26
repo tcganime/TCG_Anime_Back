@@ -1,14 +1,8 @@
 import { Schema, model } from 'mongoose';
 
 const monsterCardSchema = new Schema({
-    id: {
-        type: Number,
-        unique: true,
-        autoIncrement: true
-    },
     name: {
         type: String,
-        unique: true,
         required: true,
         minlength: 3,
         maxlength: 255
@@ -23,13 +17,33 @@ const monsterCardSchema = new Schema({
         required: true,
         default: Date.now
     },
+    attribute: {
+        type: String,
+        required: true,
+        default: ''
+    },
+    level: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    atk: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    def: {
+        type: Number,
+        required: true,
+        default: 0
+    },
     archetypes: {
         type: [String],
         required: true,
         default: []
     },
     card_type: {
-        type: String,
+        type: [String],
         required: true,
         default: ''
     },

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { SHA512 } from 'crypto-js';
-import * as check from '../utils/check_functions'
+import * as check from './utils/check_functions'
 import jwtFunctions from '../jwt/jwt.functions';
 import { Document, ObjectId } from 'mongoose';
 
@@ -27,6 +27,7 @@ router.post('/register', async (req: Request, res: Response) => {
             email: req.body.email,
             password: pass
         }).then((user: User) => {
+            user.save()
             console.log(user._id.toString(), user.admin, user.username, user.email, user.victories, user.defeats)
             let jwt = jwtFunctions.createJWT(user._id.toString(), user.admin);
             res.status(200).json({ 'token': jwt, 'admin': user.admin.toString() });

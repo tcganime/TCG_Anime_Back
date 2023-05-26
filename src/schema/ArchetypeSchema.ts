@@ -1,14 +1,8 @@
 import { Schema, model } from 'mongoose';
 
 const archetypeSchema = new Schema({
-    id: {
-        type: Number,
-        unique: true,
-        autoIncrement: true
-    },
     name: {
         type: String,
-        unique: true,
         required: true,
         minlength: 3,
         maxlength: 255
@@ -22,6 +16,21 @@ const archetypeSchema = new Schema({
         type: Date,
         required: true,
         default: Date.now
+    },
+    traps: {
+        type: [String],
+        required: true,
+        default: []
+    },
+    spells: {
+        type: [String],
+        required: true,
+        default: []
+    },
+    monsters: {
+        type: [String],
+        required: true,
+        default: []
     }
 });
 
