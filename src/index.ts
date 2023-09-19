@@ -5,6 +5,8 @@ import cors from 'cors';
 // Routers
 import userRouter from './routes/users.routes';
 import monsterCardRouter from './routes/monster.card.routes';
+import trapCardRouter from './routes/trap.card.routes';
+import spellCardRouter from './routes/spell.card.routes';
 
 import mongoose, { ConnectOptions } from 'mongoose';
 
@@ -44,6 +46,8 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/users', userRouter);
 app.use('/monsters', monsterCardRouter);
+app.use('/traps', trapCardRouter);
+app.use('/spells', spellCardRouter);
 
 app.listen(8000, () => {
     console.log(`Server is running at port http://localhost:${8000}`);
