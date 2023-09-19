@@ -1,14 +1,8 @@
 import { Schema, model } from 'mongoose';
 
 const deckSchema = new Schema({
-    id: {
-        type: Number,
-        unique: true,
-        autoIncrement: true
-    },
     name: {
         type: String,
-        unique: true,
         required: true,
         minlength: 3,
         maxlength: 255

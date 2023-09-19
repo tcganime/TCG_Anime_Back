@@ -3,19 +3,16 @@ const { Schema, model } = require('mongoose');
 const UserSchema = new Schema({
     id: {
         type: Number,
-        unique: true,
         autoIncrement: true
     },
     username: {
         type: String,
-        unique: true,
         required: true,
         minlength: 3,
         maxlength: 255
     },
     email: {
         type: String,
-        unique: true,
         required: true,
         minlength: 3,
         maxlength: 255
