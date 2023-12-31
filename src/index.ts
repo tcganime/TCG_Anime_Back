@@ -1,33 +1,28 @@
 import express, {Express, Request, Response} from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import sequelize from './database/db_sequelize';
-import DATABASE from './database/tables_database';
-import secret_key from './jwt/secret_key';
 
 // Routers
-import userRouter from './routes/users.routes';
-import deckRouter from './routes/deck.routes';
-import monsterCardRouter from './routes/monster.card.routes';
-import spellCardRouter from './routes/spell.card.routes';
-import trapCardRouter from './routes/trap.card.routes';
+import userRouter from './routes/everyone_part/users.routes';
+import adminRouter from './routes/admin_part/admin_router';
 
-DATABASE.init();
-
-sequelize.authenticate().then(() => {
-  console.log('Connection has been established successfully.');
-}).catch((error: Error) => {
-  console.error('Unable to connect to the database:', error);
-})
-
-
-console.log('Secret key is initialised')
-
-var bodyParser = require('body-parser');
-dotenv.config();
+import mongoose, { ConnectOptions } from 'mongoose';
 
 const app: Express = express();
-const port = process.env.PORT;
+const db = mongoose.connection;
+var bodyParser = require('body-parser');
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.info('Connected to MongoDB');
+});
+
+mongoose.connect("mongodb+srv://photanime2023:anime_card@cluster0.t659vop.mongodb.net/?retryWrites=true&w=majority", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+} as ConnectOptions);
+
+dotenv.config();
 
 app.use(cors({origin: true, credentials: true}));
 
@@ -46,12 +41,9 @@ app.get('/', (req: Request, res: Response) => {
 );
 
 app.use('/users', userRouter);
-app.use('/decks', deckRouter);
-app.use('/cards', monsterCardRouter);
-app.use('/cards', spellCardRouter);
-app.use('/cards', trapCardRouter);
+app.use('/admin', adminRouter);
 
-app.listen(port, () => {
-    console.log(`Server is running at port http://localhost:${port}`);
+app.listen(8000, () => {
+    console.log(`Server is running at port http://localhost:${8000}`);
   }
 );
