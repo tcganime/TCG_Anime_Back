@@ -3,14 +3,10 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 
 // Routers
-import userRouter from './routes/users.routes';
-import monsterCardRouter from './routes/monster.card.routes';
-import trapCardRouter from './routes/trap.card.routes';
-import spellCardRouter from './routes/spell.card.routes';
+import userRouter from './routes/everyone_part/users.routes';
+import adminRouter from './routes/admin_part/admin_router';
 
 import mongoose, { ConnectOptions } from 'mongoose';
-
-const DB_NAME = 'your_database_name';
 
 const app: Express = express();
 const db = mongoose.connection;
@@ -45,9 +41,7 @@ app.get('/', (req: Request, res: Response) => {
 );
 
 app.use('/users', userRouter);
-app.use('/monsters', monsterCardRouter);
-app.use('/traps', trapCardRouter);
-app.use('/spells', spellCardRouter);
+app.use('/admin', adminRouter);
 
 app.listen(8000, () => {
     console.log(`Server is running at port http://localhost:${8000}`);

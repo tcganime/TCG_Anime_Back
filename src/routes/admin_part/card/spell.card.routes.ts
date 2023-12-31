@@ -1,13 +1,13 @@
 import express, { Request, Response, Router } from 'express';
 import { SHA512 } from 'crypto-js';
-import jwtFunctions from '../jwt/jwt.functions';
+import jwtFunctions from '../../../jwt/jwt.functions';
 import { Document, ObjectId } from 'mongoose';
 import e from 'express';
 
-const MonsterCardSchema = require('../schema/MonsterCardSchema');
-const TrapCardSchema = require('../schema/TrapCardSchema');
-const SpellCardSchema = require('../schema/SpellCardSchema');
-const ArchetypeSchema = require('../schema/ArchetypeSchema');
+const MonsterCardSchema = require('../../../schema/MonsterCardSchema');
+const TrapCardSchema = require('../../../schema/TrapCardSchema');
+const SpellCardSchema = require('../../../schema/SpellCardSchema');
+const ArchetypeSchema = require('../../../schema/ArchetypeSchema');
 
 // router
 
